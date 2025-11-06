@@ -38,10 +38,12 @@ def get_coordinates(name):
 
 
 def get_current_weather(city):
-    weatherPath = f"queries/weatherdata/{city}.json"
+    datePath = f"queries/weatherdata/{today.strftime('%Y-%m-%d')}"
+    weatherPath = f"{datePath}/{city}.json"
     if os.path.exists(weatherPath):
         with open(weatherPath, "r") as f:
             weatherData = json.load(f)
+
     else:
         url = "https://api.open-meteo.com/v1/forecast?"
         city = city.lower().capitalize()
@@ -58,6 +60,9 @@ def get_current_weather(city):
         else:
             raise requests.exceptions.HTTPError(
                 f"Request failed with status code {response.status_code}: {response.text}")
+
+        if not os.path.exists(datePath):
+            os.makedirs(datePath)
 
         with open(weatherPath, "w") as f:
             json.dump(weatherData, f, indent=4)
