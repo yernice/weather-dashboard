@@ -1,1 +1,3 @@
 queries/
+__pycache__/
+.venv/
